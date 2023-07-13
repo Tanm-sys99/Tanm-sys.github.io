@@ -1,0 +1,1557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="<$BlogLanguageDirection$>">
+
+<head>
+  <title><$BlogPageTitle$></title> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+  <script>
+    // Function to sanitize input to prevent LDAP injection
+    function sanitizeInput(input) {
+      // Replace characters that could be used for LDAP injection
+      var sanitizedInput = input.replace(/[&<>"'\/\\]/g, '');
+
+      return sanitizedInput;
+    }
+
+    // Function to handle form submission
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      // Get the user input from the form
+      var userInput = document.getElementById('inputField').value;
+
+      // Sanitize the user input
+      var sanitizedInput = sanitizeInput(userInput);
+
+      // Send the sanitized input to the server for validation
+      validateInput(sanitizedInput);
+    }
+
+    // Function to send the sanitized input to the server for validation
+    function validateInput(input) {
+      // Send a POST request to the server
+      axios.post('/validate', { input: input })
+        .then(function(response) {
+          // Handle the server response
+          if (response.data.valid) {
+            // The input is valid, proceed with further processing
+            // ...
+          } else {
+            // The input is invalid, display an error message or take appropriate action
+            // ...
+          }
+        })
+        .catch(function(error) {
+          // Handle errors
+          console.error('Error:', error);
+        });
+    }
+    </script>
+    <script>
+  // Disable right-click context menu
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  // Check if Developer Tools are opened
+  function detectDevTools() {
+    var devToolsOpen = false;
+    var threshold = 160; // Threshold for dimension comparison
+
+    // Check for various indicators of Developer Tools
+    function checkIndicators() {
+      var detected = false;
+
+      // Create an element with a large size to compare dimensions
+      var element = document.createElement('div');
+      element.style.width = '100px';
+      element.style.height = '100px';
+      element.style.overflow = 'scroll';
+      element.style.position = 'absolute';
+      element.style.top = '-9999px';
+      element.style.left = '-9999px';
+
+      // Append the element to the document
+      document.body.appendChild(element);
+
+      // Compare dimensions to detect any changes
+      if (
+        (element.offsetWidth - element.clientWidth) > threshold ||
+        (element.offsetHeight - element.clientHeight) > threshold
+      ) {
+        detected = true;
+      }
+
+      // Clean up the element
+      document.body.removeChild(element);
+
+      // Check for additional indicators
+      if (
+        detected ||
+        window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized ||
+        typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' ||
+        Array.isArray(window.console) ||
+        /./.test(function() { return this; }) ||
+        /xyz/.test(function() { return /./; })
+      ) {
+        devToolsOpen = true;
+      }
+    }
+
+    // Periodically check for Developer Tools
+    setInterval(function() {
+      checkIndicators();
+      if (devToolsOpen) {
+        // Developer Tools detected, take appropriate action
+        alert('Developer Tools detected!');
+        // Redirect to a different page or perform other security measures
+        window.location.href = 'https://google.com';
+      }
+    }, 1000);
+
+    // Check for keyboard shortcuts commonly used to open Developer Tools
+    document.addEventListener('keydown', function(e) {
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.shiftKey && e.keyCode === 74)) {
+        devToolsOpen = true;
+        // Developer Tools detected, take appropriate action
+        alert('Developer Tools detected!');
+        // Redirect to a different page or perform other security measures
+        window.location.href = 'https://google.com';
+      }
+    });
+  }
+
+  detectDevTools();
+    </script>  
+  <style>
+    /* Styles for the JavaScript blocking overlay */
+    .js-blocking-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+    }
+
+    .js-blocking-content {
+      text-align: center;
+      transform: translateY(100px);
+      opacity: 0;
+    }
+
+    .js-blocking-content p {
+      color: #fff;
+      font-size: 24px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script>
+    // Function to dynamically load JavaScript resources
+    function loadScript(url, callback) {
+      var script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.onload = callback;
+      document.head.appendChild(script);
+    }
+
+    // Check if JavaScript is blocked or disabled
+    if (typeof window === 'undefined') {
+      // JavaScript is disabled
+      window.location.href = 'javascript-disabled.html';
+    } else {
+      // JavaScript is blocked or unsupported
+      var noscript = document.createElement('noscript');
+      noscript.innerHTML = '<meta http-equiv="refresh" content="0;url=javascript-blocked.html">';
+      document.head.appendChild(noscript);
+
+      // Remove the JavaScript blocking overlay
+      function removeOverlay() {
+        var overlay = document.getElementById('js-blocking-overlay');
+        if (overlay) {
+          anime({
+            targets: overlay,
+            opacity: 0,
+            duration: 500,
+            easing: 'easeOutQuart',
+            complete: function () {
+              overlay.parentNode.removeChild(overlay);
+            }
+          });
+        }
+      }
+
+      // Display the JavaScript blocking overlay
+      function displayOverlay() {
+        var overlay = document.createElement('div');
+        overlay.id = 'js-blocking-overlay';
+        overlay.className = 'js-blocking-overlay';
+        overlay.innerHTML = '<div class="js-blocking-content"><p>JavaScript is required to view this website. Please enable JavaScript in your browser settings.</p></div>';
+        document.body.appendChild(overlay);
+
+        var content = overlay.querySelector('.js-blocking-content');
+
+        anime({
+          targets: overlay,
+          opacity: 1,
+          duration: 800,
+          easing: 'easeInOutQuart'
+        });
+
+        anime.timeline({
+          targets: content,
+          translateY: ['-50px', 0],
+          opacity: [0, 1],
+          duration: 800,
+          delay: 300,
+          easing: 'easeInOutQuart'
+        }).add({
+          translateX: ['-50px', '50px'],
+          loop: true,
+          direction: 'alternate',
+          easing: 'easeInOutSine',
+          duration: 2000
+        });
+      }
+
+      // Load JavaScript resources dynamically
+      function loadJavaScript() {
+        // Example JavaScript resources
+        var resources = [
+          'script1.js',
+          'script2.js',
+          'script3.js'
+        ];
+
+        var loadedCount = 0;
+
+        // Callback function when all JavaScript resources are loaded
+        function onAllScriptsLoaded() {
+          // Remove the overlay when JavaScript is loaded
+          removeOverlay();
+
+          // Initialize the website or perform additional setup
+          // ...
+        }
+
+        // Load each JavaScript resource
+        function loadNextScript() {
+          if (loadedCount === resources.length) {
+            onAllScriptsLoaded();
+          } else {
+            var resource = resources[loadedCount];
+            loadScript(resource, function () {
+              loadedCount++;
+              loadNextScript();
+            });
+          }
+        }
+
+        // Start loading JavaScript resources
+        loadNextScript();
+      }
+
+      // Display the overlay if JavaScript is not loaded after a certain delay
+      setTimeout(displayOverlay, 2000);
+
+      // Load JavaScript resources
+      loadJavaScript();
+    }
+  </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/secure-random/0.1.1/secure-random.min.js"></script>
+  <script>
+    "use strict";
+
+    // Generate a random encryption key using a key derivation function
+    function generateEncryptionKey() {
+      var keyLength = 32; // 256 bits (AES-256)
+      var salt = SecureRandom.getRandomArray(16); // Generate a random salt
+      var iterations = 10000; // Number of iterations (adjust according to your security needs)
+
+      // Derive the encryption key using PBKDF2 (Password-Based Key Derivation Function 2)
+      var key = CryptoJS.PBKDF2("password", salt, { keySize: keyLength, iterations: iterations });
+
+      return key.toString();
+    }
+
+    // Encrypt data using AES-256 and 3DES (cascade encryption)
+    function encryptData(data, aesKey, desKey) {
+      var aesEncrypted = CryptoJS.AES.encrypt(data, aesKey);
+      var desEncrypted = CryptoJS.TripleDES.encrypt(aesEncrypted.toString(), desKey);
+      return desEncrypted.toString();
+    }
+
+    // Decrypt data using 3DES and AES-256 (cascade decryption)
+    function decryptData(encryptedData, aesKey, desKey) {
+      var desDecrypted = CryptoJS.TripleDES.decrypt(encryptedData, desKey);
+      var aesDecrypted = CryptoJS.AES.decrypt(desDecrypted.toString(), aesKey);
+      return aesDecrypted.toString(CryptoJS.enc.Utf8);
+    }
+    </script>
+    <script>
+    "use strict";
+
+    // Validate and sanitize user input
+    function validateInput(input) {
+      // Regular expression to allow only specific characters
+      var pattern = /^[a-zA-Z0-9\s]+$/;
+
+      // Perform input validation
+      if (pattern.test(input)) {
+        return true;
+      } else {
+        // Handle invalid input (e.g., display an error message)
+        console.error("Invalid input detected.");
+        return false;
+      }
+    }
+
+    // Sanitize user input
+    function sanitizeInput(input) {
+      // Replace potentially dangerous characters
+      var sanitizedInput = input.replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;")
+                                .replace(/"/g, "&quot;")
+                                .replace(/'/g, "&#39;")
+                                .replace(/`/g, "&#x60;");
+
+      return sanitizedInput;
+    }
+
+    // Process user input
+    function processInput() {
+      var userInput = document.getElementById("user-input").value;
+
+      // Validate user input before using it
+      if (validateInput(userInput)) {
+        // Sanitize the input before further processing
+        var sanitizedInput = sanitizeInput(userInput);
+
+        // Perform safe operations with the sanitized input
+        console.log("Sanitized input: " + sanitizedInput);
+        // ...
+      }
+    }
+  </script>
+    <script>
+    "use strict";
+
+    // Check for RTCPeerConnection support
+    var isRTCPeerConnectionSupported = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+
+    // Block IP address leakage
+    function blockIPAddressLeakage() {
+      if (isRTCPeerConnectionSupported) {
+        var rtcPeerConnection = new RTCPeerConnection({ iceServers: [] });
+        rtcPeerConnection.createDataChannel("");
+        rtcPeerConnection.createOffer(function(sessionDescription) {
+          rtcPeerConnection.setLocalDescription(sessionDescription, function() {}, function() {});
+        }, function() {});
+        rtcPeerConnection.onicecandidate = function(event) {
+          if (event.candidate) {
+            var candidate = event.candidate.candidate;
+            if (candidate.indexOf("192.168.") === 0 || candidate.indexOf("10.") === 0 || candidate.indexOf("172.") === 0) {
+              console.warn("Private IP address leak detected: " + candidate);
+              // Handle IP address leakage (e.g., display an error message)
+            }
+          }
+        };
+      }
+    }
+
+    // Call the function to block IP address leakage
+    blockIPAddressLeakage();
+  </script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XVF4HW7YZS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XVF4HW7YZS');
+</script>
+</head>
+    <script>
+    "use strict";
+
+    // Content Security Policy (CSP) Header
+    var cspHeader = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'none';";
+
+    // Set Content-Security-Policy header
+    function setContentSecurityPolicy() {
+      var meta = document.createElement("meta");
+      meta.httpEquiv = "Content-Security-Policy";
+      meta.content = cspHeader;
+      document.head.appendChild(meta);
+    }
+
+    // Escape user input to prevent Cross-Site Scripting (XSS) attacks
+    function escapeHTML(input) {
+      var element = document.createElement("div");
+      element.innerText = input;
+      return element.innerHTML;
+    }
+
+    // Implement secure communication by redirecting to HTTPS
+    if (location.protocol !== "https:") {
+      location.href = "https://" + location.hostname + location.pathname + location.search;
+    }
+
+    // Disable right-click context menu
+    document.addEventListener("contextmenu", function(event) {
+      event.preventDefault();
+    });
+
+    // Disable the ability to drag and drop content
+    document.addEventListener("dragstart", function(event) {
+      event.preventDefault();
+    });
+
+    // Disable inspecting element and viewing source code
+    document.addEventListener("keydown", function(event) {
+      if (event.keyCode === 73 && event.ctrlKey && event.shiftKey) { // Ctrl + Shift + I
+        event.preventDefault();
+      }
+      if (event.keyCode === 83 && event.ctrlKey && event.shiftKey) { // Ctrl + Shift + S
+        event.preventDefault();
+      }
+    });
+
+    // Prevent modification of JavaScript code
+    Object.freeze(window);
+
+    // Protect against clickjacking attacks using X-Frame-Options header
+    if (top !== self) {
+      top.location.href = self.location.href;
+    }
+
+    // Disable dangerous functions and properties
+    delete window.eval;
+    delete window.Function;
+    delete window.setInterval;
+    delete window.setTimeout;
+
+    // Prevent modification of built-in JavaScript objects
+    Object.freeze(Object.prototype);
+    Object.freeze(Array.prototype);
+    Object.freeze(Function.prototype);
+    Object.freeze(Number.prototype);
+    Object.freeze(String.prototype);
+    Object.freeze(Boolean.prototype);
+    Object.freeze(Error.prototype);
+
+    // Randomize function and variable names
+    var _0xabc = "Hello";
+    var _0xdef = function() {
+      console.log(_0xabc);
+    };
+
+    // Call the security functions
+    setContentSecurityPolicy();
+
+    // Example of using the escapeHTML function to display user-generated content safely
+    var userInput = "<script>alert('XSS attack!')</script>";
+    var safeHTML = escapeHTML(userInput);
+    document.getElementById("user-content").innerHTML = safeHTML;
+  </script>
+    <script>
+    (function() {
+      // Content Security Policy (CSP) Header
+      var cspHeader = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors 'none';";
+
+      // Set Content-Security-Policy header
+      function setContentSecurityPolicy() {
+        var meta = document.createElement("meta");
+        meta.httpEquiv = "Content-Security-Policy";
+        meta.content = cspHeader;
+        document.head.appendChild(meta);
+      }
+
+      // Escape user input to prevent Cross-Site Scripting (XSS) attacks
+      function escapeHTML(input) {
+        var element = document.createElement("div");
+        element.innerText = input;
+        return element.innerHTML;
+      }
+
+      // Implement secure communication by redirecting to HTTPS
+      if (location.protocol !== "https:") {
+        location.href = "https://" + location.hostname + location.pathname + location.search;
+      }
+
+      // Disable right-click context menu
+      document.addEventListener("contextmenu", function(event) {
+        event.preventDefault();
+      });
+
+      // Disable the ability to drag and drop content
+      document.addEventListener("dragstart", function(event) {
+        event.preventDefault();
+      });
+
+      // Disable inspecting element and viewing source code
+      document.addEventListener("keydown", function(event) {
+        if (event.keyCode === 73 && event.ctrlKey && event.shiftKey) { // Ctrl + Shift + I
+          event.preventDefault();
+        }
+        if (event.keyCode === 83 && event.ctrlKey && event.shiftKey) { // Ctrl + Shift + S
+          event.preventDefault();
+        }
+      });
+
+      // Call the security functions
+      setContentSecurityPolicy();
+
+      // Example of using the escapeHTML function to display user-generated content safely
+      var userInput = "<script>alert('XSS attack!');</script>";
+      var safeHTML = escapeHTML(userInput);
+      document.getElementById("user-content").innerHTML = safeHTML;
+    })();
+  </script>
+    <script>
+    // Function to fetch data from the server
+    function fetchData() {
+      // Replace with your data fetching logic
+      // Example: Fetching JSON data from an API
+      fetch('https://api.example.com/data')
+        .then(response => response.json())
+        .then(data => {
+          // Store the fetched data in localStorage
+          localStorage.setItem('cachedData', JSON.stringify(data));
+          console.log('Data fetched and cached successfully.');
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+
+    // Function to retrieve cached data
+    function getCachedData() {
+      // Retrieve the cached data from localStorage
+      var cachedData = localStorage.getItem('cachedData');
+      if (cachedData) {
+        console.log('Using cached data:', JSON.parse(cachedData));
+        // Perform operations with the cached data
+        // Example: Displaying the cached data on the page
+        var resultContainer = document.getElementById('result');
+        resultContainer.textContent = cachedData;
+      } else {
+        console.log('No cached data found.');
+        // Fetch data from the server if no cached data is available
+        fetchData();
+      }
+    }
+
+    // Call the function to retrieve cached data when the page loads
+    window.addEventListener('load', getCachedData);
+  </script>
+    <script>
+    // Progressive enhancement flag
+    var isEnhanced = false;
+
+    // Function to enhance the website when JavaScript is enabled
+    function enhanceWebsite() {
+      // Add additional JavaScript-dependent functionality here
+      // For example, you can show/hide certain elements, load dynamic content, etc.
+      isEnhanced = true;
+    }
+
+    // Check if JavaScript is enabled
+    var isJavaScriptEnabled = (function() {
+      // Try to set a flag using JavaScript
+      var testFlag = "test";
+      try {
+        localStorage.setItem(testFlag, testFlag);
+        localStorage.removeItem(testFlag);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    })();
+
+    // Redirect if JavaScript is disabled
+    if (!isJavaScriptEnabled) {
+      window.location.href = "javascript-disabled.html"; // Replace with your desired URL or action
+    } else {
+      // Enhance the website if JavaScript is enabled
+      enhanceWebsite();
+    }
+  </script>
+  <noscript>
+    <!-- Fallback content for users with disabled JavaScript -->
+    <style>
+      /* Style to hide JavaScript-dependent elements when JavaScript is disabled */
+      .js-dependent {
+        display: none;
+      }
+    </style>
+  </noscript>
+    <script>
+      const express = require('express');
+const app = express();
+
+// Middleware to set Strict-Transport-Security header
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  next();
+});
+
+// ... Rest of your server configuration and routes
+
+// Start the server
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+    </script>
+    <script>
+      // Function to set a cookie
+function setCookie(name, value, options) {
+  options = options || {};
+
+  var cookie = name + "=" + encodeURIComponent(value);
+
+  // Set expiration date
+  if (options.expires instanceof Date) {
+    cookie += "; expires=" + options.expires.toUTCString();
+  } else if (typeof options.expires === "number") {
+    var expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + options.expires);
+    cookie += "; expires=" + expirationDate.toUTCString();
+  }
+
+  // Set path
+  if (options.path) {
+    cookie += "; path=" + options.path;
+  }
+
+  // Set domain
+  if (options.domain) {
+    cookie += "; domain=" + options.domain;
+  }
+
+  // Set secure flag
+  if (options.secure) {
+    cookie += "; secure";
+  }
+
+  document.cookie = cookie;
+}
+
+// Function to get the value of a cookie
+function getCookie(name) {
+  var cookies = document.cookie.split(';');
+
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].trim();
+
+    if (cookie.startsWith(name + "=")) {
+      return decodeURIComponent(cookie.substring(name.length + 1));
+    }
+  }
+
+  return null;
+}
+
+// Check if website cache exists in localStorage
+if (localStorage.getItem('websiteCache')) {
+  // Website cache exists, retrieve it
+  var websiteCache = JSON.parse(localStorage.getItem('websiteCache'));
+} else {
+  // Website cache doesn't exist, initialize it
+  var websiteCache = {};
+}
+
+// Function to store website cache
+function storeWebsiteCache(url, data) {
+  // Update the cache with the new data
+  websiteCache[url] = data;
+
+  // Save the updated cache to localStorage
+  localStorage.setItem('websiteCache', JSON.stringify(websiteCache));
+}
+
+// Function to retrieve website cache
+function retrieveWebsiteCache(url) {
+  // Check if the cache for the given URL exists
+  if (websiteCache.hasOwnProperty(url)) {
+    // Return the cached data
+    return websiteCache[url];
+  } else {
+    // Cache doesn't exist for the given URL
+    return null;
+  }
+}
+     </script>
+    
+    <script>
+
+      // Add common security headers
+function addSecurityHeaders() {
+  document.addEventListener("DOMContentLoaded", function() {
+    // X-Content-Type-Options
+    var meta1 = document.createElement("meta");
+    meta1.httpEquiv = "X-Content-Type-Options";
+    meta1.content = "nosniff";
+    document.head.appendChild(meta1);
+
+    // X-Frame-Options
+    var meta2 = document.createElement("meta");
+    meta2.httpEquiv = "X-Frame-Options";
+    meta2.content = "deny";
+    document.head.appendChild(meta2);
+
+    // X-XSS-Protection
+    var meta3 = document.createElement("meta");
+    meta3.httpEquiv = "X-XSS-Protection";
+    meta3.content = "1; mode=block";
+    document.head.appendChild(meta3);
+  });
+}
+
+// Call the function to add the common security headers
+addSecurityHeaders();
+ </script>
+  <$BlogMetaData$>
+    <script>
+
+  function checkSecureConnection() {
+
+  if (window.location.protocol === "https:") {
+
+    console.log("The connection is secure.");
+
+  } else {
+
+    console.log("The connection is not secure. Redirecting to HTTPS...");
+
+    redirectToHTTPS();
+
+  }
+
+}
+
+function redirectToHTTPS() {
+
+  if (window.location.protocol !== "https:") {
+
+    window.location.href = "https://" + window.location.host + window.location.pathname;
+
+  }
+
+}
+
+// Call the function to check the connection
+
+checkSecureConnection();
+
+</script>
+
+    <script>
+   function sanitizeCSSInput(input) {
+  // Remove potentially malicious characters
+  return input.replace(/[<>&"]/g, "");
+}
+
+// Example usage
+const userCSSInput = '<script>alert("CSS injection!");</script>';
+    <style type="text/css">
+/*
+-----------------------------------------------
+Blogger Template Style
+Name:     Rounders
+Date:     27 Feb 2004
+----------------------------------------------- */
+
+
+body {
+  background:#aba;
+  margin:0;
+  padding:20px 10px;
+  text-align:center;
+  font:x-small/1.5em "Trebuchet MS",Verdana,Arial,Sans-serif;
+  color:#333;
+  font-size/* */:/**/small;
+  font-size: /**/small;
+  }
+
+
+/* Page Structure
+----------------------------------------------- */
+/* The images which help create rounded corners depend on the 
+   following widths and measurements. If you want to change 
+   these measurements, the images will also need to change.
+   */
+@media all {
+  #content {
+    width:740px;
+    margin:0 auto;
+    text-align:left;
+    }
+  #main {
+    width:485px;
+    float:left;
+    background:#fff url("https://resources.blogblog.com/blogblog/data/rounders/corners_main_bot.gif") no-repeat left bottom;
+    margin:15px 0 0;
+    padding:0 0 10px;
+    color:#000;
+    font-size:97%;
+    line-height:1.5em;
+    }
+  #main2 {
+    float:left;
+    width:100%;
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/corners_main_top.gif") no-repeat left top;
+    padding:10px 0 0;
+    }
+  #main3 {
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/rails_main.gif") repeat-y;
+    padding:0;
+    }
+  #sidebar {
+    width:240px;
+    float:right;
+    margin:15px 0 0;
+    font-size:97%;
+    line-height:1.5em;
+    }
+  }
+@media handheld {
+  #content {
+    width:90%;
+    }
+  #main {
+    width:100%;
+    float:none;
+    background:#fff;
+    }
+  #main2 {
+    float:none;
+    background:none;
+    }
+  #main3 {
+    background:none;
+    padding:0;
+    }
+  #sidebar {
+    width:100%;
+    float:none;
+    }
+  }
+
+
+/* Links
+----------------------------------------------- */
+a:link {
+  color:#258;
+  }
+a:visited {
+  color:#666;
+  }
+a:hover {
+  color:#c63;
+  }
+a img {
+  border-width:0;
+  }
+
+
+/* Blog Header
+----------------------------------------------- */
+@media all {
+  #header {
+    background:#456 url("https://resources.blogblog.com/blogblog/data/rounders/corners_cap_top.gif") no-repeat left top;
+    margin:0 0 0;
+    padding:8px 0 0;
+    color:#fff;
+    }
+  #header div {
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/corners_cap_bot.gif") no-repeat left bottom;
+    padding:0 15px 8px;
+    }
+  }
+@media handheld {
+  #header {
+    background:#456;
+    }
+  #header div {
+    background:none;
+    }
+  }
+#blog-title {
+  margin:0;
+  padding:10px 30px 5px;
+  font-size:200%;
+  line-height:1.2em;
+  }
+#blog-title a {
+  text-decoration:none;
+  color:#fff;
+  }
+#description {
+  margin:0;
+  padding:5px 30px 10px;
+  font-size:94%;
+  line-height:1.5em;
+  }
+
+
+/* Posts
+----------------------------------------------- */
+.date-header {
+  margin:0 28px 0 43px;
+  font-size:85%;
+  line-height:2em;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  color:#357;
+  }
+.post {
+  margin:.3em 0 25px;
+  padding:0 13px;
+  border:1px dotted #bbb;
+  border-width:1px 0;
+  }
+.post-title {
+  margin:0;
+  font-size:135%;
+  line-height:1.5em;
+  background:url("https://resources.blogblog.com/blogblog/data/rounders/icon_arrow.gif") no-repeat 10px .5em;
+  display:block;
+  border:1px dotted #bbb;
+  border-width:0 1px 1px;
+  padding:2px 14px 2px 29px;
+  color:#333;
+  }
+a.title-link, .post-title strong {
+  text-decoration:none;
+  display:block;
+  }
+a.title-link:hover {
+  background-color:#ded;
+  color:#000;
+  }
+.post-body {
+  border:1px dotted #bbb;
+  border-width:0 1px 1px;
+  border-bottom-color:#fff;
+  padding:10px 14px 1px 29px;
+  }
+html>body .post-body {
+  border-bottom-width:0;
+  }
+.post p {
+  margin:0 0 .75em;
+  }
+p.post-footer {
+  background:#ded;
+  margin:0;
+  padding:2px 14px 2px 29px;
+  border:1px dotted #bbb;
+  border-width:1px;
+  border-bottom:1px solid #eee;
+  font-size:100%;
+  line-height:1.5em;
+  color:#666;
+  text-align:right;
+  }
+html>body p.post-footer {
+  border-bottom-color:transparent;
+  }
+p.post-footer em {
+  display:block;
+  float:left;
+  text-align:left;
+  font-style:normal;
+  }
+a.comment-link {
+  /* IE5.0/Win doesn't apply padding to inline elements,
+     so we hide these two declarations from it */
+  background/* */:/**/url("https://resources.blogblog.com/blogblog/data/rounders/icon_comment.gif") no-repeat 0 45%;
+  padding-left:14px;
+  }
+html>body a.comment-link {
+  /* Respecified, for IE5/Mac's benefit */
+  background:url("https://resources.blogblog.com/blogblog/data/rounders/icon_comment.gif") no-repeat 0 45%;
+  padding-left:14px;
+  }
+.post img {
+  margin:0 0 5px 0;
+  padding:4px;
+  border:1px solid #ccc;
+  }
+blockquote {
+  margin:.75em 0;
+  border:1px dotted #ccc;
+  border-width:1px 0;
+  padding:5px 15px;
+  color:#666;
+  }
+.post blockquote p {
+  margin:.5em 0;
+  }
+
+
+/* Comments
+----------------------------------------------- */
+#comments {
+  margin:-25px 13px 0;
+  border:1px dotted #ccc;
+  border-width:0 1px 1px;
+  padding:20px 0 15px 0;
+  }
+#comments h4 {
+  margin:0 0 10px;
+  padding:0 14px 2px 29px;
+  border-bottom:1px dotted #ccc;
+  font-size:120%;
+  line-height:1.4em;
+  color:#333;
+  }
+#comments-block {
+  margin:0 15px 0 9px;
+  }
+.comment-data {
+  background:url("https://resources.blogblog.com/blogblog/data/rounders/icon_comment.gif") no-repeat 2px .3em;
+  margin:.5em 0;
+  padding:0 0 0 20px;
+  color:#666;
+  }
+.comment-poster {
+  font-weight:bold;
+  }
+.comment-body {
+  margin:0 0 1.25em;
+  padding:0 0 0 20px;
+  }
+.comment-body p {
+  margin:0 0 .5em;
+  }
+.comment-timestamp {
+  margin:0 0 .5em;
+  padding:0 0 .75em 20px;
+  color:#666;
+  }
+.comment-timestamp a:link {
+  color:#666;
+  }
+.deleted-comment {
+  font-style:italic;
+  color:gray;
+  }
+.paging-control-container {
+  float: right;
+  margin: 0px 6px 0px 0px;
+  font-size: 80%;
+}
+.unneeded-paging-control {
+  visibility: hidden;
+}
+
+
+/* Profile
+----------------------------------------------- */
+@media all {
+  #profile-container {
+    background:#cdc url("https://resources.blogblog.com/blogblog/data/rounders/corners_prof_bot.gif") no-repeat left bottom;
+    margin:0 0 15px;
+    padding:0 0 10px;
+    color:#345;
+    }
+  #profile-container h2 {
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/corners_prof_top.gif") no-repeat left top;
+    padding:10px 15px .2em;
+    margin:0;
+    border-width:0;
+    font-size:115%;
+    line-height:1.5em;
+    color:#234;
+    }
+  }
+@media handheld {
+  #profile-container {
+    background:#cdc;
+    }
+  #profile-container h2 {
+    background:none;
+    }
+  }
+.profile-datablock {
+  margin:0 15px .5em;
+  border-top:1px dotted #aba;
+  padding-top:8px;
+  }
+.profile-img {display:inline;}
+.profile-img img {
+  float:left;
+  margin:0 10px 5px 0;
+  border:4px solid #fff;
+  }
+.profile-data strong {
+  display:block;
+  }
+#profile-container p {
+  margin:0 15px .5em;
+  }
+#profile-container .profile-textblock {
+  clear:left;
+  }
+#profile-container a {
+  color:#258;
+  }
+.profile-link a {
+  background:url("https://resources.blogblog.com/blogblog/data/rounders/icon_profile.gif") no-repeat 0 .1em;
+  padding-left:15px;
+  font-weight:bold;
+  }
+ul.profile-datablock {
+  list-style-type:none;
+  }
+
+
+/* Sidebar Boxes
+----------------------------------------------- */
+@media all {
+  .box {
+    background:#fff url("https://resources.blogblog.com/blogblog/data/rounders/corners_side_top.gif") no-repeat left top;
+    margin:0 0 15px;
+    padding:10px 0 0;
+    color:#666;
+    }
+  .box2 {
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/corners_side_bot.gif") no-repeat left bottom;
+    padding:0 13px 8px;
+    }
+  }
+@media handheld {
+  .box {
+    background:#fff;
+    }
+  .box2 {
+    background:none;
+    }
+  }
+.sidebar-title {
+  margin:0;
+  padding:0 0 .2em;
+  border-bottom:1px dotted #9b9;
+  font-size:115%;
+  line-height:1.5em;
+  color:#333;
+  }
+.box ul {
+  margin:.5em 0 1.25em;
+  padding:0 0px;
+  list-style:none;
+  }
+.box ul li {
+  background:url("https://resources.blogblog.com/blogblog/data/rounders/icon_arrow_sm.gif") no-repeat 2px .25em;
+  margin:0;
+  padding:0 0 3px 16px;
+  margin-bottom:3px;
+  border-bottom:1px dotted #eee;
+  line-height:1.4em;
+  }
+.box p {
+  margin:0 0 .6em;
+  }
+
+
+/* Footer
+----------------------------------------------- */
+#footer {
+  clear:both;
+  margin:0;
+  padding:15px 0 0;
+  }
+@media all {
+  #footer div {
+    background:#456 url("https://resources.blogblog.com/blogblog/data/rounders/corners_cap_top.gif") no-repeat left top;
+    padding:8px 0 0;
+    color:#fff;
+    }
+  #footer div div {
+    background:url("https://resources.blogblog.com/blogblog/data/rounders/corners_cap_bot.gif") no-repeat left bottom;
+    padding:0 15px 8px;
+    }
+  }
+@media handheld {
+  #footer div {
+    background:#456;
+    }
+  #footer div div {
+    background:none;
+    }
+  }
+#footer hr {display:none;}
+#footer p {margin:0;}
+#footer a {color:#fff;}
+
+
+/* Feeds
+----------------------------------------------- */
+#blogfeeds {
+  }
+#postfeeds {
+  padding:0 15px 0;
+  }
+  </style>
+
+
+</head>
+
+
+
+<body>
+  <script>
+    // Smooth scrolling function with advanced animated scroll effect
+function smoothScroll(target, duration) {
+  var targetElement = document.querySelector(target);
+  var targetPosition = targetElement.getBoundingClientRect().top;
+  var startPosition = window.pageYOffset || document.documentElement.scrollTop;
+  var distance = targetPosition - startPosition;
+  var startTime = null;
+
+  function scrollAnimation(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    var timeElapsed = currentTime - startTime;
+    var scrollY = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+    window.scrollTo(0, scrollY);
+    if (timeElapsed < duration) requestAnimationFrame(scrollAnimation);
+  }
+
+  // Easing function
+  function easeInOutCubic(t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t * t + b;
+    t -= 2;
+    return c / 2 * (t * t * t + 2) + b;
+  }
+
+  anime({
+    targets: document.documentElement,
+    scrollTop: targetPosition,
+    duration: duration,
+    easing: 'easeInOutCubic',
+    complete: function() {
+      anime({
+        targets: targetElement,
+        opacity: [0, 1],
+        translateY: [-50, 0],
+        scale: [0.8, 1],
+        duration: 1000,
+        easing: 'easeOutElastic'
+      });
+    }
+  });
+}
+
+// Smooth scroll triggered by clicking on a link with a hash (#)
+var links = document.querySelectorAll('a[href^="#"]');
+links.forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = this.getAttribute('href');
+    smoothScroll(target, 800);
+  });
+});
+  </script>
+  <h1>Welcome to the website</h1>
+  
+  <div class="js-dependent">
+    <!-- JavaScript-dependent content -->
+    <p>This content is only visible when JavaScript is enabled.</p>
+  </div>
+  
+  <div class="js-dependent">
+    <!-- Another JavaScript-dependent content -->
+    <button onclick="alert('JavaScript works!')">Click Me</button>
+  </div>
+  <div id="adblock-message" class="animate__animated">
+  <p>We noticed that you are using an ad blocker.</p>
+  <p>Please consider whitelisting our website to support us.</p>
+  <p>Here's how to whitelist us:</p>
+  <ol>
+    <li>Click on the ad blocker extension icon in your browser's toolbar.</li>
+    <li>Select "Options" or "Settings" from the menu.</li>
+    <li>Add our website URL (e.g., www.example.com) to the whitelist or exceptions list.</li>
+  </ol>
+</div>
+
+<script src="blockadblock.js"></script>
+<script>
+  // Function to execute when an ad blocker is detected
+  function adBlockDetected() {
+    var adblockMessage = document.getElementById('adblock-message');
+    adblockMessage.classList.add('animate__bounceInDown');
+    adblockMessage.style.display = 'block';
+  }
+
+  // Function to execute when no ad blocker is detected
+  function adBlockNotDetected() {
+    var adblockMessage = document.getElementById('adblock-message');
+    adblockMessage.style.display = 'none';
+  }
+
+  // Check if an ad blocker is detected
+  function checkAdBlocker() {
+    if (typeof blockAdBlock === 'undefined') {
+      adBlockNotDetected();
+    } else {
+      blockAdBlock.onDetected(adBlockDetected);
+      blockAdBlock.onNotDetected(adBlockNotDetected);
+      blockAdBlock.on(true, adBlockDetected);
+      blockAdBlock.on(false, adBlockNotDetected);
+      blockAdBlock.check();
+    }
+  }
+
+  // Periodically check for ad blocker presence
+  setInterval(checkAdBlocker, 3000); // Check every 3 seconds
+  checkAdBlocker(); // Initial check
+  </script>
+  
+ 
+  <!-- Begin #content - Centers all content and provides edges for floated columns -->
+
+<div id="content">
+
+
+
+<!-- Blog Header -->
+
+<div id="header"><div>
+
+  <h1 id="blog-title">
+    <ItemPage><a href="<$BlogURL$>"></ItemPage>
+<$BlogTitle$>
+<ItemPage></a></ItemPage>
+  </h1>
+  <p id="description"><$BlogDescription$></p>
+
+</div></div>
+
+
+
+
+
+<!-- Begin #main - Contains main-column blog content -->
+
+<div id="main"><div id="main2"><div id="main3">
+
+<Blogger>
+
+    <BlogDateHeader>
+  <h2 class="date-header"><$BlogDateHeaderDate$></h2>
+  </BlogDateHeader>
+
+         <!-- Begin .post -->
+
+  <div class="post"><a name="<$BlogItemNumber$>"></a>
+
+     <BlogItemTitle>
+ <BlogItemUrl><a href="<$BlogItemUrl$>" title="external link" class="title-link"></BlogItemUrl>
+    <h3 class="post-title">
+ <$BlogItemTitle$>
+    </h3>
+ <BlogItemUrl></a></BlogItemUrl>
+    </BlogItemTitle>
+
+         <div class="post-body">
+
+          <p>
+      <$BlogItemBody$>
+    </p>
+
+        </div>
+
+        <p class="post-footer">
+
+      <em><$I18NPostedByAuthorNickname$> @ <a href="<$BlogItemPermalinkUrl$>" title="permanent link"><$BlogItemDateTime$></a></em> &nbsp;
+      <BlogItemCommentsEnabled>
+         <a class="comment-link" href="<$BlogItemCommentCreate$>"<$BlogItemCommentFormOnclick$>><span style="text-transform:lowercase"><$I18NNumComments$></span></a>
+      </BlogItemCommentsEnabled>
+ <$BlogItemControl$>
+    </p>
+
+    </div>
+
+  <!-- End .post -->
+
+        <!-- Begin #comments -->
+ <ItemPage>
+
+  <div id="comments">
+
+<BlogItemCommentsEnabled><a name="comments"></a>
+
+        <h4><$I18NNumComments$>:</h4>
+
+        <dl id="comments-block">
+          <$CommentPager$>
+      <BlogItemComments>
+
+      <dt class="comment-data" id="<$BlogCommentAnchorName$>"><a name="<$BlogCommentAnchorName$>"></a>
+
+        <$I18NAtCommentTimeWithPermalink$>,
+
+        <$I18NCommentAuthorSaid$>
+
+      </dt>
+
+      <dd class="comment-body">
+
+        <p><$BlogCommentBody$></p>
+  <$BlogCommentDeleteIcon$>
+
+      </dd>
+
+  </BlogItemComments>
+    <$CommentPager$>
+
+    </dl>
+<p class="comment-timestamp">
+    <$BlogItemCreate$>
+    </p>
+    <p id="postfeeds"><$BlogItemFeedLinks$></p>
+    </BlogItemCommentsEnabled>    
+
+
+<p style="padding-left:20px;">
+<a href="<$BlogURL$>">&lt;&lt; <$I18NHome$></a>
+    </p>
+    </div>
+
+</ItemPage>
+
+  <!-- End #comments -->
+
+</Blogger>
+
+
+
+</div></div></div>
+
+<!-- End #main -->
+
+
+
+
+
+
+
+
+
+<!-- Begin #sidebar -->
+
+<div id="sidebar">
+
+    <!-- Begin #profile-container -->
+
+   <$BlogMemberProfile$>
+
+  <!-- End #profile -->
+
+
+
+    <!-- Begin .box -->
+
+  <div class="box"><div class="box2"><div class="box3">
+    
+        <MainOrArchivePage>
+  <h2 class="sidebar-title"><$I18NLinks$></h2>
+    <ul>
+    <li><a href="https://news.google.com/">Google News</a></li>
+    <li><a href="https://support.google.com/blogger/answer/41427">Edit-Me</a></li>
+    <li><a href="https://support.google.com/blogger/answer/41427">Edit-Me</a></li>
+  </ul>
+  </MainOrArchivePage>
+
+      <h2 class="sidebar-title"><$I18NPreviousPosts$></h2>
+    <ul id="recently">
+    <BloggerPreviousItems>
+        <li><a href="<$BlogItemPermalinkURL$>"><$BlogPreviousItemTitle$></a></li>
+     </BloggerPreviousItems>
+  </ul>
+
+    <MainOrArchivePage>
+  <h2 class="sidebar-title"><$I18NArchives$></h2>
+    <ul class="archive-list">
+     <BloggerArchives>
+    <li><a href="<$BlogArchiveURL$>"><$BlogArchiveName$></a></li>
+  </BloggerArchives>
+      <ArchivePage><li><a href="<$BlogURL$>"><$I18NCurrentPosts$></a></li></ArchivePage>
+
+  </ul>
+  </MainOrArchivePage>
+      
+
+
+        <!--
+
+    <p>This is a paragraph of text that could go in the sidebar.</p>
+
+    -->
+
+    </div></div></div>
+
+  <!-- End .box -->
+
+
+
+
+</div>
+
+<!-- End #sidebar -->
+
+
+
+
+
+
+
+
+
+<!-- Begin #footer -->
+
+<div id="footer"><div><div><hr />
+
+
+
+  <p><!-- This is an optional footer. If you want text here, place it inside these tags, and remove this comment. -->&nbsp;</p>
+
+
+
+</div></div></div>
+
+<!-- End #footer -->
+
+
+
+
+
+
+
+
+</div>
+
+<!-- End #content -->
+
+
+
+</body>
+
+</html>
